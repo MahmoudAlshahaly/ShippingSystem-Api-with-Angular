@@ -1,0 +1,46 @@
+<div class="container-fluid p-5">
+  <div class="formbg p-4 mt-3" style="background-color: #c0d6df71">
+    <div class="px-4 p-2">
+      <div>
+        <p class="py-3 w-50 rounded" style="font-weight: 800; color: #4f6d7a">
+          اضافة محافظة
+        </p>
+      </div>
+      <form
+        class="d-flex flex-wrap gap-3"
+        [formGroup]="GovernorateForm"
+        (ngSubmit)="AddGovernorate()"
+      >
+      <div>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="اسم المحافظة"
+          formControlName="name"
+        />
+
+        <div
+          class="errs"
+          *ngIf="
+          GovernorateForm.get('name')?.errors && GovernorateForm.get('name')?.touched
+          "
+        >
+          <p class="text-danger" *ngIf="GovernorateForm.get('name')?.errors?.['required']">
+            الاسم مطلوب
+          </p>
+        </div>
+      </div>
+
+      <div>
+
+        <button
+          [disabled]="GovernorateForm.invalid"
+          type="submit"
+          class="special btn btn-primary">
+          اضافة
+        </button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
