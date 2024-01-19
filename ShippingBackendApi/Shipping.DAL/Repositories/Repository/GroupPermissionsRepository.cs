@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Shipping.DAL.Repositories
 {
-    public class GroupPermissionsRepository:TRepository<GroupPermission> ,IGroupPermissionsRepository
+    public class GroupPermissionsRepository:Repository<GroupPermission> ,IGroupPermissionsRepository
     {
         private readonly ShippingContext _context;
 

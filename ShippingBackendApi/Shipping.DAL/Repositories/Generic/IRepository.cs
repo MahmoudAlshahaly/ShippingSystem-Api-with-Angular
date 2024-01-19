@@ -15,6 +15,7 @@ namespace Shipping.DAL.Repositories
         Task<T> GetByIdAsync(int id);
         Task<T> GetByCriteriaAsync(Expression<Func<T, bool>> criteria, string[]? includes = null);
         Task<IQueryable<T>> GetAllAsync();
+        Task<List<T>> GetAllNOWAsync();
         Task<int> AddAsync(T entity);
         Task<int> UpdateAsync(T entity);
         Task<int> DeleteAsync(int id);

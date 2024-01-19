@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Shipping.DAL.Repositories
 {
-    public class SpecialPricesRepository : TRepository<SpecialPrice>, ISpecialPricesRepository
+    public class SpecialPricesRepository : Repository<SpecialPrice>, ISpecialPricesRepository
     {
         private readonly ShippingContext _context;
 

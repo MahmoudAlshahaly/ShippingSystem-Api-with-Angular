@@ -15,6 +15,8 @@ using System.Threading.RateLimiting;
 using Shipping.BLL.Managers.Block;
 using Shipping.API.middelware;
 using Microsoft.AspNetCore.Mvc;
+using Shipping.DAL.Repositories.Interfaces;
+using Shipping.DAL.Repositories.Generic;
 
 namespace Shipping.API
 {
@@ -54,11 +56,11 @@ namespace Shipping.API
 
            
            
-
+            
             #region Repositories
          
          
-			builder.Services.AddScoped(typeof(IRepository<>), typeof(TRepository<>));
+			builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IGroupPermissionsRepository, GroupPermissionsRepository>();
@@ -83,8 +85,9 @@ namespace Shipping.API
             builder.Services.AddScoped<IShippingTypeManager, ShippingTypeManager>();
             builder.Services.AddScoped<IDeliverToVillageManager, DeliverToVillageManager>();
 
-
-
+            builder.Services.AddScoped(typeof(ICachedGenericRepository<>), typeof(CachedGenericRepository<>));
+            builder.Services.AddSingleton<MyMemoryCache>();
+            builder.Services.AddMemoryCache();
 
 
             #endregion
@@ -94,16 +97,19 @@ namespace Shipping.API
 
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = "Bearer";
-                options.DefaultChallengeScheme = "Bearer";
-            }).AddJwtBearer("Bearer", options =>
+                options.DefaultAuthenticateScheme = "nadine";
+                options.DefaultChallengeScheme = "nadine";
+            }).AddJwtBearer("nadine", options =>
             {
 
                 var secretKey = Encoding.ASCII.GetBytes(builder.Configuration.GetSection("SecretKey").Value ?? string.Empty);
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = false,
-                    ValidateAudience = false,                 
+
+                    ValidateAudience = false,
+                    
+                    
                     IssuerSigningKey = new SymmetricSecurityKey(secretKey),
                 };
             });
@@ -193,9 +199,20 @@ namespace Shipping.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
             app.UseRateLimiter();
             //app.UseMiddleware<IpBlockMiddelware>();
-            app.UseMiddleware<SampleMiddleware>();
+            app.Use(async (context, next) =>
+            {
+                Console.WriteLine("before in line middelware 1");
+                await next(context);
+                Console.WriteLine("after  in line middelware 1");
+
+            });
+            //app.UseMiddleware<TestMiddelware>();
+            //app.UseMiddleware<SampleMiddleware>();
+            app.UseMiddleware<GlobalExceptionMiddleware>();
+            //app.UseMiddleware<PayloadValidationMiddleware>();
             app.UseCors();
             app.UseHttpsRedirection();
             app.UseAuthentication();

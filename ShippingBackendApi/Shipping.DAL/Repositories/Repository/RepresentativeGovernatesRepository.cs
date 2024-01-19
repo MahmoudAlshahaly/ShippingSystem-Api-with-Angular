@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Shipping.DAL.Repositories
 {
-    public class RepresentativeGovernatesRepository:TRepository<RepresentativeGovernate>,IRepresentativeGovernatesRepository
+    public class RepresentativeGovernatesRepository:Repository<RepresentativeGovernate>,IRepresentativeGovernatesRepository
     {
 
         private readonly ShippingContext _context;

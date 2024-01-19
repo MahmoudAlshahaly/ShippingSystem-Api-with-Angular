@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Shipping.DAL.Data;
 using Microsoft.Extensions.Logging;
+using Shipping.DAL.Repositories.Interfaces;
 
 namespace Shipping.BLL.Managers
 {
@@ -20,14 +21,38 @@ namespace Shipping.BLL.Managers
         private readonly IRepository<Governorate> _governorateRepository;
         private readonly ILogger<City> logger;
         private readonly ShippingContext context;
+        private readonly ICachedGenericRepository<City> cityCacheRepository;
 
         public CityManager(IRepository<City> cityRepository, IRepository<Governorate> governorateRepository, ILogger<City> logger
-            ,ShippingContext context )
+            ,ShippingContext context , ICachedGenericRepository<City> cityCacheRepository)
         {
             _cityRepository = cityRepository;
             _governorateRepository=governorateRepository;
             this.logger = logger;
             this.context = context;
+            this.cityCacheRepository = cityCacheRepository;
+        }
+        public async Task<IEnumerable<ShowCityDto>> GetAllNOWAsync()
+        {
+            //var a = _cityRepository.GetHashCode().ToString();
+            //var g = context.GetHashCode().ToString();
+            //"16298857"
+            //"31908225"
+            //"34429430" con
+
+            var cities =await cityCacheRepository.GetAllCachedAsync(GetType().FullName);
+
+
+            return cities.Select(c => new ShowCityDto
+            {
+                id = c.Id,
+                Name = c.Name,
+                Price = c.Price,
+                Pickup = c.Pickup,
+                GovernorateId = c.GovernorateId,
+
+            });
+
         }
         public async Task<IEnumerable<ShowCityDto>> GetAllAsync(int govId )
         {

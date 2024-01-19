@@ -5,6 +5,8 @@ using Shipping.BLL.Dtos.CityDtos;
 using Shipping.BLL.Dtos;
 using Shipping.BLL.Managers;
 using Shipping.API.Filters;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Shipping.API.Controllers
 {
@@ -18,12 +20,24 @@ namespace Shipping.API.Controllers
         {
             _cityManager = cityManager;
         }
+        [HttpGet("GetAllCachedCities")]
+        //[TypeFilter(typeof(GpAttribute))]
+        
+        public async Task<ActionResult<IEnumerable<ShowCityDto>>> GetAllCachedCities()
+        {
+            var cities = await _cityManager.GetAllNOWAsync();
+
+            return Ok(cities);
+        }
 
 
         [HttpGet]
+        //[TypeFilter(typeof(GpAttribute))]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ShowCityDto>>> GetAllCities( int id)
         {
             var cities = await _cityManager.GetAllAsync(id);
+
             return Ok(cities);
         }
 

@@ -8,8 +8,7 @@ using Shipping.DAL.Params;
 namespace Shipping.API.Controllers
 {
     [Route("api/[controller]")]
-    [TypeFilter(typeof(IpBlockActionFilterAttribute))]
-
+   // [TypeFilter(typeof(IpBlockActionFilterAttribute))]
     [ApiController]
     //[RequireHttps]
 
@@ -28,24 +27,28 @@ namespace Shipping.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDtos loginDTO)
         {
-            try
-            {
-                var token = await _userManager.LoginUser(loginDTO);
-                if (token == null)
-                {
-                    logger.LogError("finish action");
-                    return Ok(new { message = "Invalid" });
-                }
-                else
-                    logger.LogError("finish action");
 
-                return Ok(new { Token = token });
-            }
-            catch(Exception ex) 
-            {
-                logger.LogError("finish action");
-                return BadRequest(ex.Message);
-            }
+
+            //try
+            //{
+                //var token = await _userManager.LoginUser(loginDTO);
+
+            throw new Exception("helllo");
+                //if (token == null)
+                //{
+                //    logger.LogError("finish action");
+                //    return Ok(new { message = "Invalid" });
+                //}
+                //else
+                //    logger.LogError("finish action");
+
+                //return Ok(new { Token = token });
+            //}
+            //catch(Exception ex) 
+            //{
+            //    logger.LogError("finish action");
+            //    return BadRequest(ex.Message);
+            //}
         }
 
 

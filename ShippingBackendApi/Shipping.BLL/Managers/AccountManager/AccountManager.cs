@@ -32,6 +32,7 @@ namespace Shipping.BLL.Managers
         {
             var user = await _userManager.FindByEmailAsync(loginDTO.Email);
         
+            
             if (user == null || user.IsDeleted == true)
             {
                 return null;
@@ -91,18 +92,22 @@ namespace Shipping.BLL.Managers
 
         private async Task<string> GenerateToken(ApplicationUser user)
         {
+
+            
             SecurityKey key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration.GetSection("SecretKey").Value ?? string.Empty));
-            SigningCredentials SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+            
+            SigningCredentials SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
            
             var claimsList = await _userManager.GetClaimsAsync(user);
+
+
             JwtSecurityToken token = new JwtSecurityToken(
                 claims: claimsList,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddDays(3),
                 signingCredentials: SigningCredentials);
 
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenString = tokenHandler.WriteToken(token);
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(null);
             return tokenString;
         }
 
